@@ -10,17 +10,10 @@ def settingenv():
     nltk.download('word_tokenize')
     nltk.download('punkt')
 
-settingenv()
-
-
-os.chdir("/Users/jeffwong/Documents/ECE/143/russian_troll_tweets")
-
 def tweets(path = "tweets.csv"):
     '''import tweets csv into a pandas dataframe'''
     tweets = pd.read_csv("tweets.csv")
     return tweets
-
-tweets = tweets()
 
 def sampling(a = 1, b = len(tweets.index), tweets = tweets):
     '''
@@ -35,8 +28,6 @@ def sampling(a = 1, b = len(tweets.index), tweets = tweets):
 
     return corpus
 
-corpus = sampling(b = 200)
-
 def tokenize(insent):
     '''
     input sentence, returns a list of words
@@ -45,8 +36,6 @@ def tokenize(insent):
     #tokenlist = word_tokenize(insent)
     tokenlist = insent.split()
     return tokenlist
-
-corpus['tokens'] = corpus['text'].apply(tokenize)
 
 def stemming(inlist):
     '''
@@ -57,8 +46,6 @@ def stemming(inlist):
     for word in inlist:
         outlist.append(stemmer.stem(word))
     return outlist
-
-corpus['tokens'] = corpus['tokens'].apply(stemming)
 
 def remove_stopwords(inlist):
     '''
@@ -72,8 +59,6 @@ def remove_stopwords(inlist):
         if word not in stop_words:
             outlist.append(word)
     return outlist
-
-corpus['tokens'] = corpus['tokens'].apply(remove_stopwords)
 
 def remove_punkt(inlist, exemption = ['@', '#']):
     '''
@@ -91,9 +76,6 @@ def remove_punkt(inlist, exemption = ['@', '#']):
         outlist.append(word)
     return outlist
 
-corpus['tokens'] = corpus['tokens'].apply(remove_punkt)
-
-
 def remove_regex(inlist, pattern = "@[\w]*"):
     '''
     use regular expression to remove words in text. 
@@ -105,22 +87,8 @@ def remove_regex(inlist, pattern = "@[\w]*"):
     filtered_list = [x for x in inlist if not regex.match(x)]
     return filtered_list
 
-corpus['tokens'] = corpus['tokens'].apply(remove_regex)
 
-# remove all python links
-corpus['tokens'] = corpus['tokens'].apply(remove_regex, pattern = "https*")
-
-# remove all hashtags
-corpus['tokens'] = corpus['tokens'].apply(remove_regex, pattern = "#[\w]*")
-
-# remove all retweets
-corpus['tokens'] = corpus['tokens'].apply(remove_regex, pattern = "rt")
-
-
-
-
-
-#note: the following function is extremely slow. Havn't figure out why.
+#note: the following function is extremely slow. Havn't figure out why. 
 
 def show_wordcloud(corpus = corpus):
     '''
@@ -148,4 +116,33 @@ def show_wordcloud(corpus = corpus):
     plt.tight_layout(pad=0)
     plt.show()
 
+
+settingenv()
+
+tweets = tweets()
+
+corpus = sampling(b = 200)
+
+corpus['tokens'] = corpus['text'].apply(tokenize)
+
+corpus['tokens'] = corpus['tokens'].apply(stemming)
+
+corpus['tokens'] = corpus['tokens'].apply(remove_stopwords)
+
+corpus['tokens'] = corpus['tokens'].apply(remove_punkt)
+
+#remove all @someone
+corpus['tokens'] = corpus['tokens'].apply(remove_regex)
+
+# remove all python links
+corpus['tokens'] = corpus['tokens'].apply(remove_regex, pattern = "https*")
+
+# remove all hashtags
+corpus['tokens'] = corpus['tokens'].apply(remove_regex, pattern = "#[\w]*")
+
+# remove all retweets
+corpus['tokens'] = corpus['tokens'].apply(remove_regex, pattern = "rt")
+
+
+#understanding what's left in the data:
 show_wordcloud(corpus = corpus)
