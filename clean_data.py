@@ -15,14 +15,14 @@ def tweets(path = "tweets.csv"):
     tweets = pd.read_csv("tweets.csv")
     return tweets
 
-def sampling(a = 1, b = len(tweets.index), tweets = tweets):
+def sampling(tweets_df, a = 1, b = 20):
     '''
     slice a sample from the original tweets
     tweets: tweets data frame
     a, b: range of sampling
     returns a corpus data frame.
     '''
-    sample = tweets.loc[a:b,]
+    sample = tweets_df.loc[a:b,]
     corpus = sample.loc[:,['text']]
     corpus['text_index'] = corpus.index
 
@@ -39,7 +39,7 @@ def tokenize(insent):
 
 def stemming(inlist):
     '''
-    input a list, returns a list of stemmed words 
+    input a list, returns a list of stemmed words
     '''
     outlist = []
     stemmer = nltk.SnowballStemmer('english')
@@ -78,7 +78,7 @@ def remove_punkt(inlist, exemption = ['@', '#']):
 
 def remove_regex(inlist, pattern = "@[\w]*"):
     '''
-    use regular expression to remove words in text. 
+    use regular expression to remove words in text.
     removes @ someone by default.
     inlist: a list of words
     pattern: a list of re pattern
@@ -88,9 +88,9 @@ def remove_regex(inlist, pattern = "@[\w]*"):
     return filtered_list
 
 
-#note: the following function is extremely slow. Havn't figure out why. 
+#note: the following function is extremely slow. Havn't figure out why.
 
-def show_wordcloud(corpus = corpus):
+def show_wordcloud(corpus):
     '''
     generate a wordcloud from corpus tokens.
     '''
@@ -116,33 +116,33 @@ def show_wordcloud(corpus = corpus):
     plt.tight_layout(pad=0)
     plt.show()
 
+if __name__=='__main__':
+    settingenv()
 
-settingenv()
+    tweets_df = tweets()
 
-tweets = tweets()
+    corpus = sampling(b = 200, tweets_df=tweets_df)
 
-corpus = sampling(b = 200)
+    corpus['tokens'] = corpus['text'].apply(tokenize)
 
-corpus['tokens'] = corpus['text'].apply(tokenize)
+    corpus['tokens'] = corpus['tokens'].apply(stemming)
 
-corpus['tokens'] = corpus['tokens'].apply(stemming)
+    corpus['tokens'] = corpus['tokens'].apply(remove_stopwords)
 
-corpus['tokens'] = corpus['tokens'].apply(remove_stopwords)
+    corpus['tokens'] = corpus['tokens'].apply(remove_punkt)
 
-corpus['tokens'] = corpus['tokens'].apply(remove_punkt)
+    #remove all @someone
+    corpus['tokens'] = corpus['tokens'].apply(remove_regex)
 
-#remove all @someone
-corpus['tokens'] = corpus['tokens'].apply(remove_regex)
+    # remove all python links
+    corpus['tokens'] = corpus['tokens'].apply(remove_regex, pattern = "https*")
 
-# remove all python links
-corpus['tokens'] = corpus['tokens'].apply(remove_regex, pattern = "https*")
+    # remove all hashtags
+    corpus['tokens'] = corpus['tokens'].apply(remove_regex, pattern = "#[\w]*")
 
-# remove all hashtags
-corpus['tokens'] = corpus['tokens'].apply(remove_regex, pattern = "#[\w]*")
-
-# remove all retweets
-corpus['tokens'] = corpus['tokens'].apply(remove_regex, pattern = "rt")
+    # remove all retweets
+    corpus['tokens'] = corpus['tokens'].apply(remove_regex, pattern = "rt")
 
 
-#understanding what's left in the data:
-show_wordcloud(corpus = corpus)
+    #understanding what's left in the data:
+    show_wordcloud(corpus = corpus)
