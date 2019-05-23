@@ -25,7 +25,8 @@ def sampling(tweets_df, a = 1, b = 20):
     sample = tweets_df.loc[a:b,]
     corpus = sample.loc[:,['text']]
     corpus['text_index'] = corpus.index
-
+    corpus.text = corpus.text.astype(str)
+    
     return corpus
 
 def tokenize(insent):
