@@ -6,9 +6,13 @@ import re
 import string
 
 def settingenv():
-    nltk.download('stopwords')
+    ''' download nltk packages '''
+    if not nltk.data.find('corpora/stopwords'):
+        nltk.download('stopwords')
+    # I wasn't able to download the word_tokenize, don't know pat
     nltk.download('word_tokenize')
-    nltk.download('punkt')
+    if not nltk.data.find('tokenizers/punkt'):
+        nltk.download('punkt')
 
 def tweets(path = "tweets.csv"):
     '''import tweets csv into a pandas dataframe'''
@@ -92,16 +96,19 @@ def create_wordcount(corpus):
     wordlist = list([a for b in corpus.tokens.tolist()for a in b])
     from collections import Counter
     c = dict(Counter(wordlist))
-    # Remove irrelevant words that only appear a couple of times
-    word_count={k:v for k, v in c.iteritems() if v > 5}
+    # Remove spaces/invalid characters
+    c.pop('')
+    # Remove words that only appear relatively few times
+    word_count={k:v for k, v in c.items() if v > len(c)/100}
     return word_count
 
-def clean_data():
+def clean_data(sample_size):
+
     settingenv()
 
     tweets_df = tweets()
 
-    corpus = sampling(b = 200, tweets_df=tweets_df)
+    corpus = sampling(b=sample_size, tweets_df=tweets_df)
 
     corpus['tokens'] = corpus['text'].apply(tokenize)
 
@@ -128,4 +135,5 @@ def clean_data():
     return words
 
 if __name__=='__main__':
-    words=clean_data()
+    words=clean_data(sample_size=200)
+    print(words)
