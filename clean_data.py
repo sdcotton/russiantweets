@@ -115,6 +115,7 @@ def clean_data():
     # remove all retweets
     corpus['tokens'] = corpus['tokens'].apply(remove_regex, pattern = "rt")
 
-
-    #understanding what's left in the data:
     return corpus
+
+if __name__=='__main__':
+    corpus=clean_data()
