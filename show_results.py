@@ -53,12 +53,12 @@ def show_histogram(words_dict):
     plt.bar(x, y, color='#ab4435')
     plt.xticks(rotation=90)
     plt.title('Russian Twitter Bot Word Frequency')
-    plt.ylabel('Frequency')
+    plt.ylabel('Frequency (%)')
     plt.show()
 
 def show_results():
     from clean_data import clean_data
-    words=clean_data(sample_size=3000)
+    words=clean_data(sample_size=30000)
     #show_wordcloud(words = words)
     show_histogram(words_dict=words)
 if __name__=='__main__':

@@ -99,7 +99,8 @@ def create_wordcount(corpus):
     # Remove spaces/invalid characters
     c.pop('')
     # Remove words that only appear relatively few times
-    word_count={k:v for k, v in c.items() if v > len(c)/100}
+    l=len(c.keys()) # Relative frequency instead of total count
+    word_count={k:v*100/l for k, v in c.items() if v > l/100}
     return word_count
 
 def clean_data(sample_size):
