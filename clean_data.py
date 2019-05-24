@@ -26,7 +26,7 @@ def sampling(tweets_df, a = 1, b = 20):
     corpus = sample.loc[:,['text']]
     corpus['text_index'] = corpus.index
     corpus.text = corpus.text.astype(str)
-    
+
     return corpus
 
 def tokenize(insent):
@@ -88,36 +88,7 @@ def remove_regex(inlist, pattern = "@[\w]*"):
     filtered_list = [x for x in inlist if not regex.match(x)]
     return filtered_list
 
-
-#note: the following function is extremely slow. Havn't figure out why.
-
-def show_wordcloud(corpus):
-    '''
-    generate a wordcloud from corpus tokens.
-    '''
-    from wordcloud import WordCloud
-    import matplotlib.pyplot as plt
-
-    wordlist = list([a for b in corpus.tokens.tolist()for a in b])
-    from collections import Counter
-    c = dict(Counter(wordlist))
-
-    wordcloud = WordCloud(
-        width = 3000,
-        height = 2000,
-        background_color = 'black').generate_from_frequencies(c)
-
-    fig = plt.figure(
-        figsize = (40, 30),
-        facecolor = 'k',
-        edgecolor = 'k')
-
-    plt.imshow(wordcloud, interpolation = 'bilinear')
-    plt.axis('off')
-    plt.tight_layout(pad=0)
-    plt.show()
-
-if __name__=='__main__':
+def clean_data():
     settingenv()
 
     tweets_df = tweets()
@@ -146,4 +117,4 @@ if __name__=='__main__':
 
 
     #understanding what's left in the data:
-    show_wordcloud(corpus = corpus)
+    return corpus
