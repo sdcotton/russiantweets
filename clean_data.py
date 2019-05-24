@@ -100,7 +100,12 @@ def create_wordcount(corpus):
     c.pop('')
     # Remove words that only appear relatively few times
     l=len(c.keys()) # Relative frequency instead of total count
-    word_count={k:v*100/l for k, v in c.items() if v > l/100}
+    # Words that should stay in graph, regardless of freq. Needed to keep 'hillary'
+    important_words=['hillary','clinton','donald','trump','obama','USA','vote',
+    'elect','president','democrat','republican','democrats','republicans',
+    'crooked','emails']
+    word_count={k:v*100/l for k, v in c.items() if v > l/50 or k in important_words}
+    #import code; code.interact(local=locals()) #DEBUG
     return word_count
 
 def clean_data(sample_size):
