@@ -88,6 +88,14 @@ def remove_regex(inlist, pattern = "@[\w]*"):
     filtered_list = [x for x in inlist if not regex.match(x)]
     return filtered_list
 
+def create_wordcount(corpus):
+    wordlist = list([a for b in corpus.tokens.tolist()for a in b])
+    from collections import Counter
+    c = dict(Counter(wordlist))
+    # Remove irrelevant words that only appear a couple of times
+    word_count={k:v for k, v in c.iteritems() if v > 5}
+    return word_count
+
 def clean_data():
     settingenv()
 
@@ -115,7 +123,9 @@ def clean_data():
     # remove all retweets
     corpus['tokens'] = corpus['tokens'].apply(remove_regex, pattern = "rt")
 
-    return corpus
+    # create word count
+    words=create_wordcount(corpus)
+    return words
 
 if __name__=='__main__':
-    corpus=clean_data()
+    words=clean_data()
