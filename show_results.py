@@ -55,11 +55,45 @@ def show_histogram(words_dict):
     plt.title('Russian Twitter Bot Word Frequency')
     plt.ylabel('Frequency (%)')
     plt.show()
+    
+def show_histograms(words1, words2):
+    assert isinstance(words1,dict)
+    assert isinstance(words2,dict)
+    import matplotlib.pyplot as plt
+
+    # Create list and sort in descending order
+    tups=list(words1.items())
+    tups.sort(key=lambda tup: tup[1],reverse=True)  # sort by values
+    m=list(map(list,zip(*tups)))  # Unzip tuples into 2 lists
+    x=m[0]
+    y=m[1]
+    plt.subplot(121)
+    plt.bar(x, y, color='#ab4435')
+    plt.xticks(rotation=90)
+    plt.title('Russian Twitter Bot Word Frequency')
+    plt.ylabel('Frequency (%)')
+    
+    # Do the same again for the second dict
+    tups = list(words2.items())
+    tups.sort(key=lambda tup: tup[1], reverse=True)
+    m = list(map(list, zip(*tups)))
+    x = m[0]
+    y = m[1]
+    plt.subplot(122)
+    plt.bar(x, y, color='#ab4435')
+    plt.xticks(rotation=90)
+    plt.title('Normal Tweet Word Frequency')
+    plt.ylabel('Frequency (%)')
+    plt.show()
 
 def show_results():
     from clean_data import clean_data
-    words=clean_data(sample_size=30000)
+    from process_data import match_error
+    trollWords = clean_data(sample_size=30000, path='tweets.csv')
+    normalWords = clean_data(sample_size=30000, path='election_day_tweets.csv')
+    matched = match_error(normalWords, trollWords, ['vote', 'trump', 'hillari', 'hillary', 'clinton', 'amp'])
+    print(matched)
     #show_wordcloud(words = words)
-    show_histogram(words_dict=words)
+    show_histograms(trollWords, normalWords)
 if __name__=='__main__':
     show_results()

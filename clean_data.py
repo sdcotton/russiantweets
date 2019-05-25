@@ -1,7 +1,5 @@
 import pandas as pd
-import numpy as np
 import nltk
-import os
 import re
 import string
 
@@ -10,23 +8,26 @@ def settingenv():
     if not nltk.data.find('corpora/stopwords'):
         nltk.download('stopwords')
     # I wasn't able to download the word_tokenize, don't know pat
-    nltk.download('word_tokenize')
+#    nltk.download('word_tokenize')
     if not nltk.data.find('tokenizers/punkt'):
         nltk.download('punkt')
 
 def tweets(path = "tweets.csv"):
     '''import tweets csv into a pandas dataframe'''
-    tweets = pd.read_csv("tweets.csv")
+    tweets = pd.read_csv(path)
     return tweets
 
-def sampling(tweets_df, a = 1, b = 20):
+def sampling(tweets_df, count=20):
     '''
     slice a sample from the original tweets
     tweets: tweets data frame
     a, b: range of sampling
     returns a corpus data frame.
     '''
-    sample = tweets_df.loc[a:b,]
+    if count <= 0:
+        sample = tweets_df
+    else:
+        sample = tweets_df.sample(n=count)
     corpus = sample.loc[:,['text']]
     corpus['text_index'] = corpus.index
     corpus.text = corpus.text.astype(str)
@@ -37,8 +38,6 @@ def tokenize(insent):
     '''
     input sentence, returns a list of words
     '''
-    from nltk.tokenize import word_tokenize
-    #tokenlist = word_tokenize(insent)
     tokenlist = insent.split()
     return tokenlist
 
@@ -70,7 +69,6 @@ def remove_punkt(inlist, exemption = ['@', '#']):
     input list of words, returns list of words w/o punctuation
     by default, @ and # are not removed since they are important features of tweets
     '''
-    import string
     #outlist = [word for word in inlist if not re.fullmatch('[' + string.punctuation + ']+', word)]
     punktlist = string.punctuation
     for e in exemption:
@@ -93,51 +91,78 @@ def remove_regex(inlist, pattern = "@[\w]*"):
     return filtered_list
 
 def create_wordcount(corpus):
-    wordlist = list([a for b in corpus.tokens.tolist()for a in b])
+    wordlist = list([a for b in corpus.tokens.tolist() for a in b])
     from collections import Counter
-    c = dict(Counter(wordlist))
+    counter = Counter(wordlist)
+    c = dict(counter)
     # Remove spaces/invalid characters
     c.pop('')
     # Remove words that only appear relatively few times
-    l=len(c.keys()) # Relative frequency instead of total count
+    l=sum(c.values()) # Relative frequency instead of total count
     # Words that should stay in graph, regardless of freq. Needed to keep 'hillary'
     important_words=['hillary','clinton','donald','trump','obama','USA','vote',
     'elect','president','democrat','republican','democrats','republicans',
     'crooked','emails']
-    word_count={k:v*100/l for k, v in c.items() if v > l/50 or k in important_words}
+    most_common = dict(counter.most_common(30)).keys()
+    word_count={k:v*100/l for k, v in c.items() if v > l/50 or k in important_words or k in most_common}
     #import code; code.interact(local=locals()) #DEBUG
     return word_count
 
-def clean_data(sample_size):
+def clean_data(sample_size, path = "tweets.csv"):
 
+    print('setting up environment...')
     settingenv()
-
-    tweets_df = tweets()
-
-    corpus = sampling(b=sample_size, tweets_df=tweets_df)
-
+    print('set up environment')
+    
+    print('loading tweets from file...')
+    tweets_df = tweets(path)
+    print('loaded tweets from file')
+    
+    print('selecting sample of tweets...')
+    corpus = sampling(count=sample_size, tweets_df=tweets_df)
+    print('selected sample of tweets')
+    
+    print('tokenizing tweets...')
     corpus['tokens'] = corpus['text'].apply(tokenize)
+    print('tokenized tweets')
 
+    print('stemming tweets...')
     corpus['tokens'] = corpus['tokens'].apply(stemming)
+    print('stemmed tweets')
 
+    print('removing stopwords...')
     corpus['tokens'] = corpus['tokens'].apply(remove_stopwords)
+    print('removed stopwords')
 
+    print('removing puncutation...')
     corpus['tokens'] = corpus['tokens'].apply(remove_punkt)
+    print('removed punctuation')
 
     #remove all @someone
+    print('removing @someones...')
     corpus['tokens'] = corpus['tokens'].apply(remove_regex)
+    print('removed @someones')
 
     # remove all python links
+    print('removing links...')
     corpus['tokens'] = corpus['tokens'].apply(remove_regex, pattern = "https*")
+    print('removed links')
 
     # remove all hashtags
+    print('removing hashtags...')
     corpus['tokens'] = corpus['tokens'].apply(remove_regex, pattern = "#[\w]*")
+    print('removed hashtags')
 
     # remove all retweets
+    print('removing retweets')
     corpus['tokens'] = corpus['tokens'].apply(remove_regex, pattern = "rt")
+    print('removed retweets')
 
     # create word count
+    print('generating word count...')
     words=create_wordcount(corpus)
+    print('generated word count')
+
     return words
 
 if __name__=='__main__':
