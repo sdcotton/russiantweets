@@ -30,7 +30,7 @@ def show_wordcloud(words):
     plt.tight_layout(pad=0)
     plt.show()
 
-def show_histograms(words, title):
+def show_histogram(words, title):
     '''
     :param words: Counter dictionary of words and their frequencies
     :type: dict
@@ -56,15 +56,54 @@ def show_histograms(words, title):
     plt.ylabel('Frequency (%)')
     plt.show()
 
+def show_comparison(comparisons):
+    '''
+    Generates a histogram plot from a dictionary value with a two-length tuple
+    for values from two datasets. Meant to plot from match_samples()
+    :param word: str:(float(troll),float(normal))
+    :format: dict(str:(float,float))
+    '''
+    assert isinstance(comparisons,dict)
+    import matplotlib.pyplot as plt
+    for word,value in comparisons.items():
+        title=word
+        plt.figure()
+        ax1 = plt.subplot(121)
+        ax1.title.set_text('Normal Users')
+        x=word
+        y1=value[0]
+        ax1.bar(x, y1, color='#ab4435')
+        bottom1, top1 = ax1.get_ylim()   # Find y1 limit
+
+        ax2 = plt.subplot(122)
+        ax2.title.set_text('Russian Bots')
+        y2=value[1]
+        ax2.bar(x, y2, color='b')
+        bottom2, top2 = ax2.get_ylim()    # Find y2 limit
+        # Set y limit to highest value for both
+        plt.ylim(bottom=0)
+        if top2<top1:
+            ax1.set_ylim(top=top1)
+            ax2.set_ylim(top=top1)
+        else:
+            ax1.set_ylim(top=top2)
+            ax2.set_ylim(top=top2)
+        plt.show()
+
 def show_results():
     from clean_data import clean_data
-    from process_data import match_error
-    trollWords = clean_data(sample_size=30000, path='tweets.csv')
-    normalWords = clean_data(sample_size=30000, path='election_day_tweets.csv')
-    matched = match_error(normalWords, trollWords, ['vote', 'trump', 'hillari', 'hillary', 'clinton', 'amp'])
-    print(matched)
-    #show_wordcloud(words = words)
-    show_histograms(trollWords,title='Russian Twitter Bot Word Frequency')
-    show_histograms(normalWords,title='User Political Tweet Word Frequency')
+    from process_data import match_error, match_samples
+    trollWords = clean_data(sample_size=300, path='tweets.csv')
+    normalWords = clean_data(sample_size=300, path='election_day_tweets.csv')
+    matched = match_error(normalWords, trollWords, ['vote'])
+    comparison_words=['vote', 'trump', 'hillari', 'hillary', 'clinton', 'amp']
+    comparisons=match_samples(normalWords, trollWords, comparison_words)
+    print(comparisons)
+    show_comparison(comparisons)
+    show_wordcloud(words = words)
+    show_histogram(trollWords,title='Russian Twitter Bot Word Frequency')
+    show_histogram(normalWords,title='User Political Tweet Word Frequency')
+    show_histogram(matched,title='Word Comparison')
+
 if __name__=='__main__':
     show_results()
