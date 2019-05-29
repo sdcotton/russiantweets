@@ -93,6 +93,7 @@ def show_comparison(comparisons):
             ax2.set_ylim(top=top2)
         plt.xticks(x_holder, [x])
         plt.show()
+
 def show_individual_comparison(comparisons, list1, list2):
     '''
     Generates a histogram plot from a dictionary value with a two-length tuple
@@ -101,6 +102,8 @@ def show_individual_comparison(comparisons, list1, list2):
     assert isinstance(comparisons,dict)
     assert isinstance(list1, list) and isinstance(list2, list)
     import matplotlib.pyplot as plt
+    import matplotlib as mpl
+    mpl.style.use('seaborn')
     first_group_normal = {}
     second_group_normal = {}
     first_group_russian = {}
@@ -113,17 +116,20 @@ def show_individual_comparison(comparisons, list1, list2):
             first_group_normal[word] = value[0]
             first_group_russian[word] = value [1]
            
-        elif word in list2:
+        if word in list2:
             second_group_normal[word] = value[0]
             second_group_russian[word] = value [1]
     
     plt.figure()
     ax1 = plt.subplot(121)
     ax1.title.set_text('Normal Users')
+    ax1.spines["top"].set_visible(False)  
+    ax1.spines["right"].set_visible(False) 
     x_place_holder = range(len(first_group_normal))
-    rect1 = ax1.bar(x_place_holder, first_group_normal.values(), color='#ab4435')
+    rect1 = ax1.bar(x_place_holder, first_group_normal.values(), width = 0.8, color='gold', edgecolor = 'darkgoldenrod', linewidth=1.1)
     bottom1, top1 = ax1.get_ylim()   # Find y1 limit
     for rect in rect1:
+        rect.set_hatch('-')
         height = rect.get_height()
         ax1.annotate('{:.2f}'.format(height),
                     xy=(rect.get_x() + rect.get_width() / 2, height),
@@ -135,8 +141,11 @@ def show_individual_comparison(comparisons, list1, list2):
     
     ax2 = plt.subplot(122)
     ax2.title.set_text('Russian Bots')
-    rect2 = ax2.bar(x_place_holder, first_group_russian.values(), color='b')
+    ax2.spines["top"].set_visible(False)  
+    ax2.spines["right"].set_visible(False) 
+    rect2 = ax2.bar(x_place_holder, first_group_russian.values(), width=0.8, color='seagreen', edgecolor = 'darkgreen', linewidth=1.1)
     for rect in rect2:
+        rect.set_hatch('|')
         height = rect.get_height()
         ax2.annotate('{:.2f}'.format(height),
                     xy=(rect.get_x() + rect.get_width() / 2, height),
@@ -158,11 +167,14 @@ def show_individual_comparison(comparisons, list1, list2):
     plt.figure()
     ax3 = plt.subplot(121)
     ax3.title.set_text('Normal Users')
+    ax3.spines["top"].set_visible(False)  
+    ax3.spines["right"].set_visible(False)
     x_place_holder = range(len(second_group_normal))
-    rect3 = ax3.bar(x_place_holder, second_group_normal.values(), color='#ab4435')
+    rect3 = ax3.bar(x_place_holder, second_group_normal.values(), color='r', edgecolor = 'black', linewidth=1.8)
     bottom3, top3 = ax3.get_ylim()   # Find y1 limit
     plt.xticks(x_place_holder, second_group_normal.keys())
     for rect in rect3:
+        rect.set_hatch('\\')
         height = rect.get_height()
         ax3.annotate('{:.2f}'.format(height),
                     xy=(rect.get_x() + rect.get_width() / 2, height),
@@ -173,11 +185,14 @@ def show_individual_comparison(comparisons, list1, list2):
 
     ax4 = plt.subplot(122)
     ax4.title.set_text('Russian Bots')
-    rect4 = ax4.bar(x_place_holder, second_group_russian.values(), color='b')
+    ax4.spines["top"].set_visible(False)  
+    ax4.spines["right"].set_visible(False)
+    rect4 = ax4.bar(x_place_holder, second_group_russian.values(), color='dodgerblue', edgecolor = 'black',linewidth=1.8)
     bottom4, top4 = ax4.get_ylim()    # Find y2 limit
     # Set y limit to highest value for both
     plt.ylim(bottom=0)
     for rect in rect4:
+        rect.set_hatch('\\')
         height = rect.get_height()
         ax4.annotate('{:.2f}'.format(height),
                     xy=(rect.get_x() + rect.get_width() / 2, height),
@@ -192,6 +207,7 @@ def show_individual_comparison(comparisons, list1, list2):
         ax4.set_ylim(top=top4)
     plt.xticks(x_place_holder, second_group_russian.keys())
     plt.show()
+    
 
 
 def show_cumulative_comparison(comparisons, list1, list2):
@@ -204,7 +220,7 @@ def show_cumulative_comparison(comparisons, list1, list2):
     import matplotlib.pyplot as plt
     first_cumulative = [0.0, 0.0]
     second_cumulative = [0.0, 0.0]
-    x_axis_print = ["", ""]
+    x_axis_print = ["Hillary Clinton", "Donald Trump"]
     ha = {'center': 'center', 'right': 'left', 'left': 'right'}
     offset = {'center': 0, 'right': 1, 'left': -1}
     xpos = 'center'
@@ -212,19 +228,20 @@ def show_cumulative_comparison(comparisons, list1, list2):
         if word in list1:
             first_cumulative[0] += value[0]
             first_cumulative[1] += value[1]
-            x_axis_print[0] = "Group " + word
         elif word in list2:
             second_cumulative[0] += value[0]
             second_cumulative[1] += value[1]
-            x_axis_print[1] = "Group " + word
     
     plt.figure()
     ax1 = plt.subplot(121)
     ax1.title.set_text('Normal Users')
+    ax1.spines["top"].set_visible(False)  
+    ax1.spines["right"].set_visible(False)
     x_place_holder = [1,2]
-    rect1 = ax1.bar(x_place_holder, [first_cumulative[0], second_cumulative[0]], width=0.5, color='#ab4435')
+    rect1 = ax1.bar(x_place_holder, [first_cumulative[0], second_cumulative[0]], width=0.5, color='r', edgecolor = 'black', linewidth=1.8)
     bottom1, top1 = ax1.get_ylim()   # Find y1 limit
     for rect in rect1:
+        rect.set_hatch('x')
         height = rect.get_height()
         ax1.annotate('{:.2f}'.format(height),
                     xy=(rect.get_x() + rect.get_width() / 2, height),
@@ -236,9 +253,12 @@ def show_cumulative_comparison(comparisons, list1, list2):
     plt.xticks(x_place_holder,x_axis_print)
     ax2 = plt.subplot(122)
     ax2.title.set_text('Russian Bots')
-    rect2 = ax2.bar(x_place_holder, [first_cumulative[1], second_cumulative[1]], width=0.5, color='b')
+    ax2.spines["top"].set_visible(False)  
+    ax2.spines["right"].set_visible(False)
+    rect2 = ax2.bar(x_place_holder, [first_cumulative[1], second_cumulative[1]], width=0.5, color='dodgerblue', edgecolor = 'black', linewidth=1.8)
     bottom2, top2 = ax2.get_ylim()    # Find y2 limit
     for rect in rect2:
+        rect.set_hatch('x')
         height = rect.get_height()
         ax2.annotate('{:.2f}'.format(height),
                     xy=(rect.get_x() + rect.get_width() / 2, height),
@@ -257,6 +277,135 @@ def show_cumulative_comparison(comparisons, list1, list2):
     plt.show()
     
 
+def show_special_comparison(comparisons, list1, list2):
+    '''
+    Generates a histogram plot from a dictionary value with a two-length tuple
+    for values from two datasets. x axis is the individual value of list1 and list2
+    '''
+    assert isinstance(comparisons,dict)
+    assert isinstance(list1, list) and isinstance(list2, list)
+    import matplotlib.pyplot as plt
+    import matplotlib as mpl
+    mpl.style.use('seaborn')
+    first_group_normal = {}
+    second_group_normal = {}
+    first_group_russian = {}
+    second_group_russian = {}
+    ha = {'center': 'center', 'right': 'left', 'left': 'right'}
+    offset = {'center': 0, 'right': 1, 'left': -1}
+    xpos = 'center'
+    for word, value in comparisons.items():
+        if word in list1:
+            first_group_normal[word] = value[0]
+            first_group_russian[word] = value [1]
+           
+        if word in list2:
+            second_group_normal[word] = value[0]
+            second_group_russian[word] = value [1]
+    
+    plt.figure()
+    ax1 = plt.subplot(121)
+    ax1.title.set_text('Normal Users')
+    ax1.spines["top"].set_visible(False)  
+    ax1.spines["right"].set_visible(False) 
+    x_place_holder = range(len(first_group_normal))
+    rect1 = ax1.bar(x_place_holder, first_group_normal.values(), width = 0.8, color='gold', edgecolor = 'darkgoldenrod', linewidth=1.1)
+    bottom1, top1 = ax1.get_ylim()   # Find y1 limit
+    for rect in rect1:
+        rect.set_hatch('-')
+        height = rect.get_height()
+        ax1.annotate('{:.2f}'.format(height),
+                    xy=(rect.get_x() + rect.get_width() / 2, height),
+                    xytext=(offset[xpos]*3, 3),  # use 3 points offset
+                    textcoords="offset points",  # in both directions
+                    ha=ha[xpos], va='bottom')
+    plt.xticks(x_place_holder, first_group_normal.keys())
+    plt.ylabel('percentage')
+    
+    ax2 = plt.subplot(122)
+    ax2.title.set_text('Russian Bots')
+    ax2.spines["top"].set_visible(False)  
+    ax2.spines["right"].set_visible(False) 
+    rect2 = ax2.bar(x_place_holder, first_group_russian.values(), width=0.8, color='seagreen', edgecolor = 'darkgreen', linewidth=1.1)
+    for rect in rect2:
+        rect.set_hatch('|')
+        height = rect.get_height()
+        ax2.annotate('{:.2f}'.format(height),
+                    xy=(rect.get_x() + rect.get_width() / 2, height),
+                    xytext=(offset[xpos]*3, 3),  # use 3 points offset
+                    textcoords="offset points",  # in both directions
+                    ha=ha[xpos], va='bottom')
+    bottom2, top2 = ax2.get_ylim()    # Find y2 limit
+    # Set y limit to highest value for both
+    plt.ylim(bottom=0)
+    if top2<top1:
+        ax1.set_ylim(top=top1)
+        ax2.set_ylim(top=top1)
+    else:
+        ax1.set_ylim(top=top2)
+        ax2.set_ylim(top=top2)
+    plt.xticks(x_place_holder, first_group_russian.keys())
+    plt.show()
+    
+    plt.figure()
+    ax3 = plt.subplot(111)
+    ax3.title.set_text('Trump vs Hillary')
+    ax3.spines["top"].set_visible(False)  
+    ax3.spines["right"].set_visible(False)
+    #x_place_holder = range(len(second_group_normal))
+    x_place_holder = np.arange(len(second_group_normal))
+    x_place_holder2 = [x + 0.4 for x in x_place_holder]
+
+    rect3 = ax3.bar(x_place_holder, second_group_normal.values(), width=0.4, color='r', edgecolor = 'black', linewidth=0.1, label='Normal Users')
+    rect44 = ax3.bar(x_place_holder2, second_group_russian.values(), width=0.4, color='dodgerblue', edgecolor = 'black', linewidth=0.1, label="Russian Bots")
+    bottom3, top3 = ax3.get_ylim()   # Find y1 limit
+    plt.xticks(x_place_holder, second_group_normal.keys())
+    for rect in rect3:
+        rect.set_hatch('\\')
+        height = rect.get_height()
+        ax3.annotate('{:.2f}'.format(height),
+                    xy=(rect.get_x() + rect.get_width() / 2, height),
+                    xytext=(offset[xpos]*3, 3),  # use 3 points offset
+                    textcoords="offset points",  # in both directions
+                    ha=ha[xpos], va='bottom')
+    for rect in rect44:
+        rect.set_hatch('//')
+        height = rect.get_height()
+        ax3.annotate('{:.2f}'.format(height),
+                    xy=(rect.get_x() + rect.get_width() / 2, height),
+                    xytext=(offset[xpos]*3, 3),  # use 3 points offset
+                    textcoords="offset points",  # in both directions
+                    ha=ha[xpos], va='bottom')
+    ax3.legend()
+    plt.ylabel('percentage')
+    '''
+    ax4 = plt.subplot(122)
+    ax4.title.set_text('Russian Bots')
+    ax4.spines["top"].set_visible(False)  
+    ax4.spines["right"].set_visible(False)
+    rect4 = ax4.bar(x_place_holder, second_group_russian.values(), color='dodgerblue', edgecolor = 'black',linewidth=1.8)
+    bottom4, top4 = ax4.get_ylim()    # Find y2 limit
+    # Set y limit to highest value for both
+    plt.xticks(x_place_holder, second_group_normal.keys())
+    for rect in rect4:
+        rect.set_hatch('\\')
+        height = rect.get_height()
+        ax4.annotate('{:.2f}'.format(height),
+                    xy=(rect.get_x() + rect.get_width() / 2, height),
+                    xytext=(offset[xpos]*3, 3),  # use 3 points offset
+                    textcoords="offset points",  # in both directions
+                    ha=ha[xpos], va='bottom')
+    plt.ylim(bottom=0)
+    if top4<top3:
+        ax3.set_ylim(top=top3)
+        ax4.set_ylim(top=top3)
+    else:
+        ax3.set_ylim(top=top4)
+        ax4.set_ylim(top=top4)
+        '''
+    plt.xticks(x_place_holder, second_group_russian.keys())
+    plt.show()
+    
 
 def show_results():
     from clean_data import clean_data
@@ -268,14 +417,14 @@ def show_results():
     comparisons=match_samples(normalWords, trollWords, comparison_words)
     print(comparisons)
     #show_comparison(comparisons)
-    list1 = ['hillari', 'clinton', 'hillary']
-    list2 = ['donald', 'trump']
-    show_cumulative_comparison(comparisons, list1, list2)
-    show_individual_comparison(comparisons, list1, list2)
-    show_wordcloud(words = words)
-    show_histogram(trollWords,title='Russian Twitter Bot Word Frequency')
-    show_histogram(normalWords,title='User Political Tweet Word Frequency')
-    show_histogram(matched,title='Word Comparison')
+    list1 = ['hillari', 'hillary']
+    list2 = ['hillari', 'clinton', 'hillary','donald', 'trump']
+    #show_cumulative_comparison(comparisons, list1, list2)
+    show_special_comparison(comparisons, list1, list2)
+    #show_wordcloud(words = words)
+    #show_histogram(trollWords,title='Russian Twitter Bot Word Frequency')
+    #show_histogram(normalWords,title='User Political Tweet Word Frequency')
+    #show_histogram(matched,title='Word Comparison')
 
 if __name__=='__main__':
     show_results()
