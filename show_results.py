@@ -30,34 +30,6 @@ def show_wordcloud(words):
     plt.tight_layout(pad=0)
     plt.show()
 
-def show_histogram(words, title):
-    '''
-    :param words: Counter dictionary of words and their frequencies
-    :type: dict
-
-    Creates a histogram with the following characteristics
-    Axes
-    :x: words
-    :y: number of occurances
-    '''
-    assert isinstance(words,dict)
-    assert isinstance(title,str)
-    import matplotlib.pyplot as plt
-
-    # Create list and sort in descending order
-    tups=list(words.items())
-    tups.sort(key=lambda tup: tup[1],reverse=True)  # sort by values
-    m=list(map(list,zip(*tups)))  # Unzip tuples into 2 lists
-    x=m[0]
-    y=m[1]
-    x_holder = range(len(x))
-    plt.bar(x_holder, y, color='#ab4435')
-    plt.xticks(x_holder, x)
-    plt.xticks(rotation=90)
-    plt.title(title)
-    plt.ylabel('Frequency (%)')
-    plt.show()
-
 def show_comparison(comparisons):
     '''
     Generates a histogram plot from a dictionary value with a two-length tuple
@@ -79,7 +51,7 @@ def show_comparison(comparisons):
         bottom1, top1 = ax1.get_ylim()   # Find y1 limit
         plt.xticks(x_holder, [x])
         ax2 = plt.subplot(122)
-        ax2.title.set_text('Russian Bots')
+        ax2.title.set_text('Russian Trolls')
         y2=value[1]
         ax2.bar([1], [y2], color='b')
         bottom2, top2 = ax2.get_ylim()    # Find y2 limit
@@ -140,7 +112,7 @@ def show_individual_comparison(comparisons, list1, list2):
     plt.ylabel('percentage')
     
     ax2 = plt.subplot(122)
-    ax2.title.set_text('Russian Bots')
+    ax2.title.set_text('Russian Trolls')
     ax2.spines["top"].set_visible(False)  
     ax2.spines["right"].set_visible(False) 
     rect2 = ax2.bar(x_place_holder, first_group_russian.values(), width=0.8, color='seagreen', edgecolor = 'darkgreen', linewidth=1.1)
@@ -184,7 +156,7 @@ def show_individual_comparison(comparisons, list1, list2):
     plt.ylabel('percentage')
 
     ax4 = plt.subplot(122)
-    ax4.title.set_text('Russian Bots')
+    ax4.title.set_text('Russian Trolls')
     ax4.spines["top"].set_visible(False)  
     ax4.spines["right"].set_visible(False)
     rect4 = ax4.bar(x_place_holder, second_group_russian.values(), color='dodgerblue', edgecolor = 'black',linewidth=1.8)
@@ -252,7 +224,7 @@ def show_cumulative_comparison(comparisons, list1, list2):
     
     plt.xticks(x_place_holder,x_axis_print)
     ax2 = plt.subplot(122)
-    ax2.title.set_text('Russian Bots')
+    ax2.title.set_text('Russian Trolls')
     ax2.spines["top"].set_visible(False)  
     ax2.spines["right"].set_visible(False)
     rect2 = ax2.bar(x_place_holder, [first_cumulative[1], second_cumulative[1]], width=0.5, color='dodgerblue', edgecolor = 'black', linewidth=1.8)
@@ -323,9 +295,9 @@ def show_special_comparison(comparisons, list1, list2):
     plt.ylabel('percentage')
     
     ax2 = plt.subplot(122)
-    ax2.title.set_text('Russian Bots')
+    ax2.title.set_text('Russian Trolls')
     ax2.spines["top"].set_visible(False)  
-    ax2.spines["right"].set_visible(False) 
+    ax2.spines["right"].set_visible(False)
     rect2 = ax2.bar(x_place_holder, first_group_russian.values(), width=0.8, color='seagreen', edgecolor = 'darkgreen', linewidth=1.1)
     for rect in rect2:
         rect.set_hatch('|')
@@ -353,11 +325,12 @@ def show_special_comparison(comparisons, list1, list2):
     ax3.spines["top"].set_visible(False)  
     ax3.spines["right"].set_visible(False)
     #x_place_holder = range(len(second_group_normal))
+    print(second_group_normal.keys())
     x_place_holder = np.arange(len(second_group_normal))
     x_place_holder2 = [x + 0.4 for x in x_place_holder]
 
     rect3 = ax3.bar(x_place_holder, second_group_normal.values(), width=0.4, color='r', edgecolor = 'black', linewidth=0.1, label='Normal Users')
-    rect44 = ax3.bar(x_place_holder2, second_group_russian.values(), width=0.4, color='dodgerblue', edgecolor = 'black', linewidth=0.1, label="Russian Bots")
+    rect44 = ax3.bar(x_place_holder2, second_group_russian.values(), width=0.4, color='dodgerblue', edgecolor = 'black', linewidth=0.1, label="Russian Trolls")
     bottom3, top3 = ax3.get_ylim()   # Find y1 limit
     plt.xticks(x_place_holder, second_group_normal.keys())
     for rect in rect3:
@@ -380,7 +353,7 @@ def show_special_comparison(comparisons, list1, list2):
     plt.ylabel('percentage')
     '''
     ax4 = plt.subplot(122)
-    ax4.title.set_text('Russian Bots')
+    ax4.title.set_text('Russian Trolls')
     ax4.spines["top"].set_visible(False)  
     ax4.spines["right"].set_visible(False)
     rect4 = ax4.bar(x_place_holder, second_group_russian.values(), color='dodgerblue', edgecolor = 'black',linewidth=1.8)
@@ -406,6 +379,36 @@ def show_special_comparison(comparisons, list1, list2):
     plt.xticks(x_place_holder, second_group_russian.keys())
     plt.show()
     
+def show_histogram(words, title):
+    '''
+    :param words: Counter dictionary of words and their frequencies
+    :type: dict
+
+    Creates a histogram with the following characteristics
+    Axes
+    :x: words
+    :y: number of occurances
+    '''
+    assert isinstance(words,dict)
+    assert isinstance(title,str)
+    import matplotlib.pyplot as plt
+    import matplotlib as mpl
+    mpl.style.use('dark_background')
+    #plt.style.use(['dark_background','presentation'])
+    # Create list and sort in descending order
+    tups=list(words.items())
+    tups.sort(key=lambda tup: tup[1],reverse=True)  # sort by values
+    m=list(map(list,zip(*tups)))  # Unzip tuples into 2 lists
+    x=m[0]
+    y=m[1]
+    x_holder = range(len(x))
+    plt.bar(x_holder, y, color='gold')
+    plt.xticks(x_holder, x)
+    plt.xticks(rotation=90)
+    plt.title(title)
+    plt.ylabel('Frequency (%)')
+    plt.show()
+
 
 def show_results():
     from clean_data import clean_data
@@ -413,17 +416,19 @@ def show_results():
     trollWords = clean_data(sample_size=300, path='tweets.csv')
     normalWords = clean_data(sample_size=300, path='election_day_tweets.csv')
     matched = match_error(normalWords, trollWords, ['vote'])
-    comparison_words=['vote', 'trump', 'hillari', 'hillary', 'clinton', 'amp']
+    comparison_words=['vote', 'trump', 'hillary', 'hillari', 'clinton', 'donald','amp']
     comparisons=match_samples(normalWords, trollWords, comparison_words)
     print(comparisons)
     #show_comparison(comparisons)
+    list1 = ['hillari', 'clinton', 'hillary']
+    list2 = ['donald', 'trump']
+    show_cumulative_comparison(comparisons, list1, list2)
     list1 = ['hillari', 'hillary']
-    list2 = ['hillari', 'clinton', 'hillary','donald', 'trump']
-    #show_cumulative_comparison(comparisons, list1, list2)
+    list2 = ['hillari',  'hillary','clinton','donald','trump']
     show_special_comparison(comparisons, list1, list2)
     #show_wordcloud(words = words)
-    #show_histogram(trollWords,title='Russian Twitter Bot Word Frequency')
-    #show_histogram(normalWords,title='User Political Tweet Word Frequency')
+    show_histogram(trollWords,title='Russian Twitter Troll Word Frequency')
+    show_histogram(normalWords,title='User Political Tweet Word Frequency')
     #show_histogram(matched,title='Word Comparison')
 
 if __name__=='__main__':
