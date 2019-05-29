@@ -50,7 +50,9 @@ def show_histogram(words, title):
     m=list(map(list,zip(*tups)))  # Unzip tuples into 2 lists
     x=m[0]
     y=m[1]
-    plt.bar(x, y, color='#ab4435')
+    x_holder = range(len(x))
+    plt.bar(x_holder, y, color='#ab4435')
+    plt.xticks(x_holder, x)
     plt.xticks(rotation=90)
     plt.title(title)
     plt.ylabel('Frequency (%)')
@@ -71,14 +73,15 @@ def show_comparison(comparisons):
         ax1 = plt.subplot(121)
         ax1.title.set_text('Normal Users')
         x=word
+        x_holder = [1]
         y1=value[0]
-        ax1.bar(x, y1, color='#ab4435')
+        ax1.bar(x_holder, [y1], color='#ab4435')
         bottom1, top1 = ax1.get_ylim()   # Find y1 limit
-
+        plt.xticks(x_holder, [x])
         ax2 = plt.subplot(122)
         ax2.title.set_text('Russian Bots')
         y2=value[1]
-        ax2.bar(x, y2, color='b')
+        ax2.bar([1], [y2], color='b')
         bottom2, top2 = ax2.get_ylim()    # Find y2 limit
         # Set y limit to highest value for both
         plt.ylim(bottom=0)
@@ -88,8 +91,8 @@ def show_comparison(comparisons):
         else:
             ax1.set_ylim(top=top2)
             ax2.set_ylim(top=top2)
+        plt.xticks(x_holder, [x])
         plt.show()
-
 def show_individual_comparison(comparisons, list1, list2):
     '''
     Generates a histogram plot from a dictionary value with a two-length tuple
@@ -102,6 +105,9 @@ def show_individual_comparison(comparisons, list1, list2):
     second_group_normal = {}
     first_group_russian = {}
     second_group_russian = {}
+    ha = {'center': 'center', 'right': 'left', 'left': 'right'}
+    offset = {'center': 0, 'right': 1, 'left': -1}
+    xpos = 'center'
     for word, value in comparisons.items():
         if word in list1:
             first_group_normal[word] = value[0]
@@ -115,13 +121,28 @@ def show_individual_comparison(comparisons, list1, list2):
     ax1 = plt.subplot(121)
     ax1.title.set_text('Normal Users')
     x_place_holder = range(len(first_group_normal))
-    ax1.bar(x_place_holder, first_group_normal.values(), color='#ab4435')
+    rect1 = ax1.bar(x_place_holder, first_group_normal.values(), color='#ab4435')
     bottom1, top1 = ax1.get_ylim()   # Find y1 limit
+    for rect in rect1:
+        height = rect.get_height()
+        ax1.annotate('{:.2f}'.format(height),
+                    xy=(rect.get_x() + rect.get_width() / 2, height),
+                    xytext=(offset[xpos]*3, 3),  # use 3 points offset
+                    textcoords="offset points",  # in both directions
+                    ha=ha[xpos], va='bottom')
     plt.xticks(x_place_holder, first_group_normal.keys())
+    plt.ylabel('percentage')
     
     ax2 = plt.subplot(122)
     ax2.title.set_text('Russian Bots')
-    ax2.bar(x_place_holder, first_group_russian.values(), color='b')
+    rect2 = ax2.bar(x_place_holder, first_group_russian.values(), color='b')
+    for rect in rect2:
+        height = rect.get_height()
+        ax2.annotate('{:.2f}'.format(height),
+                    xy=(rect.get_x() + rect.get_width() / 2, height),
+                    xytext=(offset[xpos]*3, 3),  # use 3 points offset
+                    textcoords="offset points",  # in both directions
+                    ha=ha[xpos], va='bottom')
     bottom2, top2 = ax2.get_ylim()    # Find y2 limit
     # Set y limit to highest value for both
     plt.ylim(bottom=0)
@@ -138,16 +159,31 @@ def show_individual_comparison(comparisons, list1, list2):
     ax3 = plt.subplot(121)
     ax3.title.set_text('Normal Users')
     x_place_holder = range(len(second_group_normal))
-    ax3.bar(x_place_holder, second_group_normal.values(), color='#ab4435')
+    rect3 = ax3.bar(x_place_holder, second_group_normal.values(), color='#ab4435')
     bottom3, top3 = ax3.get_ylim()   # Find y1 limit
     plt.xticks(x_place_holder, second_group_normal.keys())
-    
+    for rect in rect3:
+        height = rect.get_height()
+        ax3.annotate('{:.2f}'.format(height),
+                    xy=(rect.get_x() + rect.get_width() / 2, height),
+                    xytext=(offset[xpos]*3, 3),  # use 3 points offset
+                    textcoords="offset points",  # in both directions
+                    ha=ha[xpos], va='bottom')
+    plt.ylabel('percentage')
+
     ax4 = plt.subplot(122)
     ax4.title.set_text('Russian Bots')
-    ax4.bar(x_place_holder, second_group_russian.values(), color='b')
+    rect4 = ax4.bar(x_place_holder, second_group_russian.values(), color='b')
     bottom4, top4 = ax4.get_ylim()    # Find y2 limit
     # Set y limit to highest value for both
     plt.ylim(bottom=0)
+    for rect in rect4:
+        height = rect.get_height()
+        ax4.annotate('{:.2f}'.format(height),
+                    xy=(rect.get_x() + rect.get_width() / 2, height),
+                    xytext=(offset[xpos]*3, 3),  # use 3 points offset
+                    textcoords="offset points",  # in both directions
+                    ha=ha[xpos], va='bottom')
     if top4<top3:
         ax3.set_ylim(top=top3)
         ax4.set_ylim(top=top3)
@@ -156,6 +192,7 @@ def show_individual_comparison(comparisons, list1, list2):
         ax4.set_ylim(top=top4)
     plt.xticks(x_place_holder, second_group_russian.keys())
     plt.show()
+
 
 def show_cumulative_comparison(comparisons, list1, list2):
     '''
@@ -168,6 +205,9 @@ def show_cumulative_comparison(comparisons, list1, list2):
     first_cumulative = [0.0, 0.0]
     second_cumulative = [0.0, 0.0]
     x_axis_print = ["", ""]
+    ha = {'center': 'center', 'right': 'left', 'left': 'right'}
+    offset = {'center': 0, 'right': 1, 'left': -1}
+    xpos = 'center'
     for word, value in comparisons.items():
         if word in list1:
             first_cumulative[0] += value[0]
@@ -182,14 +222,29 @@ def show_cumulative_comparison(comparisons, list1, list2):
     ax1 = plt.subplot(121)
     ax1.title.set_text('Normal Users')
     x_place_holder = [1,2]
-    ax1.bar(x_place_holder, [first_cumulative[0], second_cumulative[0]], color='#ab4435')
+    rect1 = ax1.bar(x_place_holder, [first_cumulative[0], second_cumulative[0]], width=0.5, color='#ab4435')
     bottom1, top1 = ax1.get_ylim()   # Find y1 limit
-    plt.xticks(x_place_holder,x_axis_print)
+    for rect in rect1:
+        height = rect.get_height()
+        ax1.annotate('{:.2f}'.format(height),
+                    xy=(rect.get_x() + rect.get_width() / 2, height),
+                    xytext=(offset[xpos]*3, 3),  # use 3 points offset
+                    textcoords="offset points",  # in both directions
+                    ha=ha[xpos], va='bottom')
+    plt.ylabel('percentage')
     
+    plt.xticks(x_place_holder,x_axis_print)
     ax2 = plt.subplot(122)
     ax2.title.set_text('Russian Bots')
-    ax2.bar(x_place_holder, [first_cumulative[1], second_cumulative[1]], color='b')
+    rect2 = ax2.bar(x_place_holder, [first_cumulative[1], second_cumulative[1]], width=0.5, color='b')
     bottom2, top2 = ax2.get_ylim()    # Find y2 limit
+    for rect in rect2:
+        height = rect.get_height()
+        ax2.annotate('{:.2f}'.format(height),
+                    xy=(rect.get_x() + rect.get_width() / 2, height),
+                    xytext=(offset[xpos]*3, 3),  # use 3 points offset
+                    textcoords="offset points",  # in both directions
+                    ha=ha[xpos], va='bottom')
     # Set y limit to highest value for both
     plt.ylim(bottom=0)
     if top2<top1:
@@ -200,6 +255,8 @@ def show_cumulative_comparison(comparisons, list1, list2):
         ax2.set_ylim(top=top2)
     plt.xticks(x_place_holder, x_axis_print)
     plt.show()
+    
+
 
 def show_results():
     from clean_data import clean_data
@@ -210,7 +267,7 @@ def show_results():
     comparison_words=['vote', 'trump', 'hillari', 'hillary', 'clinton', 'amp']
     comparisons=match_samples(normalWords, trollWords, comparison_words)
     print(comparisons)
-    show_comparison(comparisons)
+    #show_comparison(comparisons)
     list1 = ['hillari', 'clinton', 'hillary']
     list2 = ['donald', 'trump']
     show_cumulative_comparison(comparisons, list1, list2)
