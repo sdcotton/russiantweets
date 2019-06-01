@@ -23,7 +23,7 @@ def match_error(source_dict, other_dict, sample_list):
     '''
     Creates dictionary with match_samples and takes the relative frequency
     (v2-v1)/v1 instead of just comparing the two directly
-
+    
     :param source_dict: 1st dictionary to find words in
     :type: dict
     :param other_dict: 2nd dictionary to find words in
