@@ -18,18 +18,18 @@ help identify a Russian Twitter Troll
 
 ## Dataset
 
-*[NBC News 200,000 known Russian twitter bot/troll tweets](https://www.nbcnews.com/tech/social-media/now-available-more-200-000-deleted-russian-troll-tweets-n844731 "NBC News")
+[NBC News 200,000 known Russian twitter bot/troll tweets](https://www.nbcnews.com/tech/social-media/now-available-more-200-000-deleted-russian-troll-tweets-n844731 "NBC News")
 
-*[Ed King's Election Day 300,000 tweet dataset on Kaggle](https://www.kaggle.com/kinguistics/election-day-tweets#election_day_tweets.csv "Kaggle")
+[Ed King's Election Day 300,000 tweet dataset on Kaggle](https://www.kaggle.com/kinguistics/election-day-tweets#election_day_tweets.csv "Kaggle")
 Unarchive the "russian-troll-tweets.zip" file and use the "tweets.csv" as the dataset.
 
 ## Scripts
 
-*clean_data.py: extracts tweets from datasets and extracts useful data to analyze
+clean_data.py: extracts tweets from datasets and extracts useful data to analyze
 
-*process_data.py: contains functions that analyze and compare the cleaned data
+process_data.py: contains functions that analyze and compare the cleaned data
 
-*show_results.py: displays the results of the analysis in a variety of ways
+show_results.py: displays the results of the analysis in a variety of ways
 
 ## Presentation
 
