@@ -1,7 +1,6 @@
 ## RussianTweets
-
-![Twitter](https://www.stickpng.com/assets/images/580b57fcd9996e24bc43c53e.png =100x20)
-
+<img src="https://www.stickpng.com/assets/images/580b57fcd9996e24bc43c53e.png"
+width="100" height="100" />
 ECE 143 Project Group 5.
 Steven, Seth, Yifan, Kimi.
 
