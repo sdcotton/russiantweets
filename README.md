@@ -1,5 +1,5 @@
 # RussianTweets <img src="https://www.stickpng.com/assets/images/580b57fcd9996e24bc43c53e.png" width="40" height="40"/>
-ECE 143 Project Group 5.
+ECE 143 Project Group 5.  
 Steven, Seth, Yifan, Kimi.
 
 ## Proposal
@@ -21,6 +21,7 @@ help identify a Russian Twitter Troll
 [NBC News 200,000 known Russian twitter bot/troll tweets](https://www.nbcnews.com/tech/social-media/now-available-more-200-000-deleted-russian-troll-tweets-n844731 "NBC News")
 
 [Ed King's Election Day 300,000 tweet dataset on Kaggle](https://www.kaggle.com/kinguistics/election-day-tweets#election_day_tweets.csv "Kaggle")
+
 Unarchive the "russian-troll-tweets.zip" file and use the "tweets.csv" as the dataset.
 
 ## Scripts
