@@ -22,8 +22,6 @@ help identify a Russian Twitter Troll
 
 [Ed King's Election Day 300,000 tweet dataset on Kaggle](https://www.kaggle.com/kinguistics/election-day-tweets#election_day_tweets.csv "Kaggle")
 
-Unarchive the "russian-troll-tweets.zip" file and use the "tweets.csv" as the dataset.
-
 ## Scripts
 
 clean_data.py: extracts tweets from datasets and extracts useful data to analyze
