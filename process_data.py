@@ -1,3 +1,6 @@
+'''
+This script is used for comparing frequencies of items in two cleaned datasets
+'''
 def match_samples(dict_one, dict_two, sample_list):
     '''Generates a pairing between the two given dicts for each
     value in the given list
@@ -23,7 +26,7 @@ def match_error(source_dict, other_dict, sample_list):
     '''
     Creates dictionary with match_samples and takes the relative frequency
     (v2-v1)/v1 instead of just comparing the two directly
-    
+
     :param source_dict: 1st dictionary to find words in
     :type: dict
     :param other_dict: 2nd dictionary to find words in

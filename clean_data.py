@@ -1,3 +1,6 @@
+'''
+This script retrieves tweets from a csv file and cleans the data into useable form
+'''
 import pandas as pd
 import nltk
 import re

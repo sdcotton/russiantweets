@@ -195,8 +195,6 @@ def show_individual_comparison(comparisons, list1, list2):
     plt.xticks(x_place_holder, second_group_russian.keys())
     plt.show()
 
-
-
 def show_cumulative_comparison(comparisons, list1, list2):
     '''
     Generates a histogram plot from a dictionary value with a two-length tuple
@@ -269,7 +267,6 @@ def show_cumulative_comparison(comparisons, list1, list2):
         ax2.set_ylim(top=top2)
     plt.xticks(x_place_holder, x_axis_print)
     plt.show()
-
 
 def show_special_comparison(comparisons, list1, list2):
     '''
@@ -437,7 +434,6 @@ def show_histogram(words, title):
     plt.title(title)
     plt.ylabel('Frequency (%)')
     plt.show()
-
 
 def show_results():
     '''
