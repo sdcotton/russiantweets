@@ -1,3 +1,6 @@
+'''
+This script takes cleaned data and displays them in interesting ways.
+'''
 import pandas as pd
 import numpy as np
 import nltk
@@ -7,7 +10,9 @@ import string
 
 def show_wordcloud(words):
     '''
-    generate a wordcloud from corpus tokens.
+    generate a wordcloud from dictionary of words and their frequencies
+    :param words: dictionary with keys as unique words, values as number of occurances
+    :type: dict
     '''
     assert isinstance(words,dict)
 
@@ -33,9 +38,12 @@ def show_wordcloud(words):
 def show_comparison(comparisons):
     '''
     Generates a histogram plot from a dictionary value with a two-length tuple
-    for values from two datasets. Meant to plot from match_samples()
-    :param word: str:(float(troll),float(normal))
+    for values from two datasets. Meant to plot from match_samples().
+    Very simplistic output
+
+    :param comparisons: dictionary of items to compare with tuples for relative frequency as keys
     :format: dict(str:(float,float))
+    :type: dict
     '''
     assert isinstance(comparisons,dict)
     import matplotlib.pyplot as plt
@@ -70,6 +78,13 @@ def show_individual_comparison(comparisons, list1, list2):
     '''
     Generates a histogram plot from a dictionary value with a two-length tuple
     for values from two datasets. x axis is the individual value of list1 and list2
+
+    :param comparisons: dict(str:(float,float))
+    :type: dict
+    :param list1:
+    :type: list
+    :param list2:
+    :type: list
     '''
     assert isinstance(comparisons,dict)
     assert isinstance(list1, list) and isinstance(list2, list)
@@ -86,17 +101,17 @@ def show_individual_comparison(comparisons, list1, list2):
     for word, value in comparisons.items():
         if word in list1:
             first_group_normal[word] = value[0]
-            first_group_russian[word] = value [1]
-           
+            first_group_russian[word] = value[1]
+
         if word in list2:
             second_group_normal[word] = value[0]
-            second_group_russian[word] = value [1]
-    
+            second_group_russian[word] = value[1]
+
     plt.figure()
     ax1 = plt.subplot(121)
     ax1.title.set_text('Normal Users')
-    ax1.spines["top"].set_visible(False)  
-    ax1.spines["right"].set_visible(False) 
+    ax1.spines["top"].set_visible(False)
+    ax1.spines["right"].set_visible(False)
     x_place_holder = range(len(first_group_normal))
     rect1 = ax1.bar(x_place_holder, first_group_normal.values(), width = 0.8, color='gold', edgecolor = 'darkgoldenrod', linewidth=1.1)
     bottom1, top1 = ax1.get_ylim()   # Find y1 limit
@@ -110,11 +125,11 @@ def show_individual_comparison(comparisons, list1, list2):
                     ha=ha[xpos], va='bottom')
     plt.xticks(x_place_holder, first_group_normal.keys())
     plt.ylabel('percentage')
-    
+
     ax2 = plt.subplot(122)
     ax2.title.set_text('Russian Trolls')
-    ax2.spines["top"].set_visible(False)  
-    ax2.spines["right"].set_visible(False) 
+    ax2.spines["top"].set_visible(False)
+    ax2.spines["right"].set_visible(False)
     rect2 = ax2.bar(x_place_holder, first_group_russian.values(), width=0.8, color='seagreen', edgecolor = 'darkgreen', linewidth=1.1)
     for rect in rect2:
         rect.set_hatch('|')
@@ -135,11 +150,11 @@ def show_individual_comparison(comparisons, list1, list2):
         ax2.set_ylim(top=top2)
     plt.xticks(x_place_holder, first_group_russian.keys())
     plt.show()
-    
+
     plt.figure()
     ax3 = plt.subplot(121)
     ax3.title.set_text('Normal Users')
-    ax3.spines["top"].set_visible(False)  
+    ax3.spines["top"].set_visible(False)
     ax3.spines["right"].set_visible(False)
     x_place_holder = range(len(second_group_normal))
     rect3 = ax3.bar(x_place_holder, second_group_normal.values(), color='r', edgecolor = 'black', linewidth=1.8)
@@ -157,7 +172,7 @@ def show_individual_comparison(comparisons, list1, list2):
 
     ax4 = plt.subplot(122)
     ax4.title.set_text('Russian Trolls')
-    ax4.spines["top"].set_visible(False)  
+    ax4.spines["top"].set_visible(False)
     ax4.spines["right"].set_visible(False)
     rect4 = ax4.bar(x_place_holder, second_group_russian.values(), color='dodgerblue', edgecolor = 'black',linewidth=1.8)
     bottom4, top4 = ax4.get_ylim()    # Find y2 limit
@@ -179,13 +194,20 @@ def show_individual_comparison(comparisons, list1, list2):
         ax4.set_ylim(top=top4)
     plt.xticks(x_place_holder, second_group_russian.keys())
     plt.show()
-    
+
 
 
 def show_cumulative_comparison(comparisons, list1, list2):
     '''
     Generates a histogram plot from a dictionary value with a two-length tuple
     for values from two datasets. x axis is the cumulative value of list1
+
+    :param comparisons: output from match_samples
+    :type: dict
+    :param list1: list of words to compare from dataset 1, used for axes
+    :type: list
+    :param list2: list of words to compare from dataset 2, used for axes
+    :type: list
     '''
     assert isinstance(comparisons,dict)
     assert isinstance(list1, list) and isinstance(list2, list)
@@ -203,11 +225,11 @@ def show_cumulative_comparison(comparisons, list1, list2):
         elif word in list2:
             second_cumulative[0] += value[0]
             second_cumulative[1] += value[1]
-    
+
     plt.figure()
     ax1 = plt.subplot(121)
     ax1.title.set_text('Normal Users')
-    ax1.spines["top"].set_visible(False)  
+    ax1.spines["top"].set_visible(False)
     ax1.spines["right"].set_visible(False)
     x_place_holder = [1,2]
     rect1 = ax1.bar(x_place_holder, [first_cumulative[0], second_cumulative[0]], width=0.5, color='r', edgecolor = 'black', linewidth=1.8)
@@ -221,11 +243,11 @@ def show_cumulative_comparison(comparisons, list1, list2):
                     textcoords="offset points",  # in both directions
                     ha=ha[xpos], va='bottom')
     plt.ylabel('percentage')
-    
+
     plt.xticks(x_place_holder,x_axis_print)
     ax2 = plt.subplot(122)
     ax2.title.set_text('Russian Trolls')
-    ax2.spines["top"].set_visible(False)  
+    ax2.spines["top"].set_visible(False)
     ax2.spines["right"].set_visible(False)
     rect2 = ax2.bar(x_place_holder, [first_cumulative[1], second_cumulative[1]], width=0.5, color='dodgerblue', edgecolor = 'black', linewidth=1.8)
     bottom2, top2 = ax2.get_ylim()    # Find y2 limit
@@ -247,12 +269,20 @@ def show_cumulative_comparison(comparisons, list1, list2):
         ax2.set_ylim(top=top2)
     plt.xticks(x_place_holder, x_axis_print)
     plt.show()
-    
+
 
 def show_special_comparison(comparisons, list1, list2):
     '''
     Generates a histogram plot from a dictionary value with a two-length tuple
     for values from two datasets. x axis is the individual value of list1 and list2
+    Used as an alternative to show_individual_comparison
+
+    :param comparisons: output from match_samples
+    :type: dict
+    :param list1: list of words to compare from dataset 1, used for axes
+    :type: list
+    :param list2: list of words to compare from dataset 2, used for axes
+    :type: list
     '''
     assert isinstance(comparisons,dict)
     assert isinstance(list1, list) and isinstance(list2, list)
@@ -270,16 +300,16 @@ def show_special_comparison(comparisons, list1, list2):
         if word in list1:
             first_group_normal[word] = value[0]
             first_group_russian[word] = value [1]
-           
+
         if word in list2:
             second_group_normal[word] = value[0]
             second_group_russian[word] = value [1]
-    
+
     plt.figure()
     ax1 = plt.subplot(121)
     ax1.title.set_text('Normal Users')
-    ax1.spines["top"].set_visible(False)  
-    ax1.spines["right"].set_visible(False) 
+    ax1.spines["top"].set_visible(False)
+    ax1.spines["right"].set_visible(False)
     x_place_holder = range(len(first_group_normal))
     rect1 = ax1.bar(x_place_holder, first_group_normal.values(), width = 0.8, color='gold', edgecolor = 'darkgoldenrod', linewidth=1.1)
     bottom1, top1 = ax1.get_ylim()   # Find y1 limit
@@ -293,10 +323,10 @@ def show_special_comparison(comparisons, list1, list2):
                     ha=ha[xpos], va='bottom')
     plt.xticks(x_place_holder, first_group_normal.keys())
     plt.ylabel('percentage')
-    
+
     ax2 = plt.subplot(122)
     ax2.title.set_text('Russian Trolls')
-    ax2.spines["top"].set_visible(False)  
+    ax2.spines["top"].set_visible(False)
     ax2.spines["right"].set_visible(False)
     rect2 = ax2.bar(x_place_holder, first_group_russian.values(), width=0.8, color='seagreen', edgecolor = 'darkgreen', linewidth=1.1)
     for rect in rect2:
@@ -318,11 +348,11 @@ def show_special_comparison(comparisons, list1, list2):
         ax2.set_ylim(top=top2)
     plt.xticks(x_place_holder, first_group_russian.keys())
     plt.show()
-    
+
     plt.figure()
     ax3 = plt.subplot(111)
     ax3.title.set_text('Trump vs Hillary')
-    ax3.spines["top"].set_visible(False)  
+    ax3.spines["top"].set_visible(False)
     ax3.spines["right"].set_visible(False)
     #x_place_holder = range(len(second_group_normal))
     print(second_group_normal.keys())
@@ -351,10 +381,9 @@ def show_special_comparison(comparisons, list1, list2):
                     ha=ha[xpos], va='bottom')
     ax3.legend()
     plt.ylabel('percentage')
-    '''
     ax4 = plt.subplot(122)
     ax4.title.set_text('Russian Trolls')
-    ax4.spines["top"].set_visible(False)  
+    ax4.spines["top"].set_visible(False)
     ax4.spines["right"].set_visible(False)
     rect4 = ax4.bar(x_place_holder, second_group_russian.values(), color='dodgerblue', edgecolor = 'black',linewidth=1.8)
     bottom4, top4 = ax4.get_ylim()    # Find y2 limit
@@ -375,19 +404,19 @@ def show_special_comparison(comparisons, list1, list2):
     else:
         ax3.set_ylim(top=top4)
         ax4.set_ylim(top=top4)
-        '''
     plt.xticks(x_place_holder, second_group_russian.keys())
     plt.show()
-    
+
 def show_histogram(words, title):
     '''
+    Creates a histogram with the following characteristics
+    Axes:
+        :x: words
+        :y: number of occurances
     :param words: Counter dictionary of words and their frequencies
     :type: dict
-
-    Creates a histogram with the following characteristics
-    Axes
-    :x: words
-    :y: number of occurances
+    :param title: graph title
+    :type: str
     '''
     assert isinstance(words,dict)
     assert isinstance(title,str)
@@ -411,25 +440,32 @@ def show_histogram(words, title):
 
 
 def show_results():
+    '''
+    Main function: this function will run all of the above functions. Originally
+    named "main()" but it could be confused with other scripts' main functions
+    '''
+    # Import other scripts' functions
     from clean_data import clean_data
     from process_data import match_error, match_samples
+    # Clean data
     trollWords = clean_data(sample_size=300, path='tweets.csv')
     normalWords = clean_data(sample_size=300, path='election_day_tweets.csv')
+    # Analyze
     matched = match_error(normalWords, trollWords, ['vote'])
     comparison_words=['vote', 'trump', 'hillary', 'hillari', 'clinton', 'donald','amp']
     comparisons=match_samples(normalWords, trollWords, comparison_words)
-    print(comparisons)
-    #show_comparison(comparisons)
+    # Display results
+    show_comparison(comparisons)
     list1 = ['hillari', 'clinton', 'hillary']
     list2 = ['donald', 'trump']
     show_cumulative_comparison(comparisons, list1, list2)
     list1 = ['hillari', 'hillary']
     list2 = ['hillari',  'hillary','clinton','donald','trump']
     show_special_comparison(comparisons, list1, list2)
-    #show_wordcloud(words = words)
+    show_wordcloud(words = words)
     show_histogram(trollWords,title='Russian Twitter Troll Word Frequency')
     show_histogram(normalWords,title='User Political Tweet Word Frequency')
-    #show_histogram(matched,title='Word Comparison')
+    show_histogram(matched,title='Word Comparison')
 
 if __name__=='__main__':
     show_results()
